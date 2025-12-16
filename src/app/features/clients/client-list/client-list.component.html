@@ -1,0 +1,31 @@
+<div class="container">
+  <h2>Liste des Clients</h2>
+  <a routerLink="/clients/new" class="btn-add">Ajouter un Client</a>
+
+  <div *ngIf="errorMessage" class="error-banner">
+    {{ errorMessage }}
+    <button class="btn-close-error" (click)="clearError()">X</button>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients">
+        <td>{{ client.nom }}</td>
+        <td>{{ client.prenom }}</td>
+        <td>{{ client.email }}</td>
+        <td>
+          <a [routerLink]="['/clients', client.id]" class="btn-edit">Modifier</a>
+          <button (click)="deleteClient(client.id)" class="btn-delete">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

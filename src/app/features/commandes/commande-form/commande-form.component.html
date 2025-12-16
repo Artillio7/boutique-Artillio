@@ -1,0 +1,122 @@
+<div class="container">
+    <h2>{{ isEditMode ? 'Modifier la' : 'Nouvelle' }} Commande</h2>
+
+    <div *ngIf="errorMessage" class="error-banner">{{ errorMessage }}</div>
+
+    <form [formGroup]="commandeForm" (ngSubmit)="onSubmit()">
+        <!-- Ligne 1: Numéro + Date -->
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="numeroCommande">Numéro Commande</label>
+                    <input type="text" id="numeroCommande" formControlName="numeroCommande" class="form-control readonly" readonly>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="dateCommande">Date</label>
+                    <input type="date" id="dateCommande" formControlName="dateCommande" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <!-- Ligne 2: Client + Statut (alignés) -->
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="clientId">Client</label>
+                    <div class="input-with-action">
+                        <select id="clientId" formControlName="clientId" class="form-control">
+                            <option value="">Sélectionner un client</option>
+                            <option *ngFor="let client of clients" [value]="client.id">
+                                {{ client.nom }} {{ client.prenom }}
+                            </option>
+                        </select>
+                        <a routerLink="/clients/new" class="btn-link" title="Ajouter un nouveau client">+ Nouveau</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="statut">Statut</label>
+                    <select id="statut" formControlName="statut" class="form-control">
+                        <option value="En cours">En cours</option>
+                        <option value="Validée">Validée</option>
+                        <option value="Expédiée">Expédiée</option>
+                        <option value="Annulée">Annulée</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Produits -->
+        <div class="section-header">
+            <h3>Produits</h3>
+            <span *ngIf="commandeForm.errors?.['noValidLine']" class="error-msg">
+                Ajoutez au moins un produit avec une quantit&eacute; valide.
+            </span>
+        </div>
+
+        <table class="table products-table">
+            <thead>
+                <tr>
+                    <th class="col-product">Produit</th>
+                    <th class="col-price">Prix Unitaire</th>
+                    <th class="col-qty">Quantité</th>
+                    <th class="col-total">Total Ligne</th>
+                    <th class="col-action">Action</th>
+                </tr>
+            </thead>
+            <tbody formArrayName="lignesCommande">
+                <tr *ngFor="let ligne of lignesCommande.controls; let i=index" [formGroupName]="i">
+                    <td>
+                        <select formControlName="produitId" class="form-control">
+                            <option [ngValue]="null">Choisir un produit</option>
+                            <option *ngFor="let p of produits" [ngValue]="p.id">
+                                {{ p.libelle }} (Stock: {{ p.stock }})
+                            </option>
+                        </select>
+                    </td>
+                    <td class="cell-price">
+                        <span class="price-display">
+                            {{ (produits | findProduit:ligne.get('produitId')?.value)?.prixUnitaire | currency:'EUR':'symbol':'1.2-2':'fr-FR' }}
+                        </span>
+                    </td>
+                    <td>
+                        <input type="number" formControlName="quantite" class="form-control input-qty" min="1" step="1">
+                    </td>
+                    <td class="cell-total">
+                        <span class="total-display">
+                            {{ ((produits | findProduit:ligne.get('produitId')?.value)?.prixUnitaire || 0) *
+                            (ligne.get('quantite')?.value || 0) | currency:'EUR':'symbol':'1.2-2':'fr-FR' }}
+                        </span>
+                    </td>
+                    <td class="cell-action">
+                        <button type="button" (click)="removeLigne(i)" class="btn-delete" title="Supprimer cette ligne">
+                            <span class="icon-delete">&#128465;</span>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="lignesCommande.length === 0">
+                    <td colspan="5" class="no-products">Aucun produit ajouté. Cliquez sur "+ Ajouter un produit".</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" (click)="addLigne()" class="btn-add-line">+ Ajouter un produit</button>
+
+        <!-- Total -->
+        <div class="total-section">
+            <span class="total-label">Total Commande :</span>
+            <span class="total-amount">{{ montantTotal | currency:'EUR':'symbol':'1.2-2':'fr-FR' }}</span>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button type="submit" [disabled]="commandeForm.invalid" class="btn-submit">
+                {{ isEditMode ? 'Mettre à jour' : 'Enregistrer' }}
+            </button>
+            <a routerLink="/commandes" class="btn-cancel">Annuler</a>
+        </div>
+    </form>
+</div>

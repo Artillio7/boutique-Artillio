@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="header">
+    <h2>Liste des Commandes</h2>
+    <a *ngIf="canCreateCommande()" routerLink="/commandes/new" class="btn-add">Nouvelle Commande</a>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-banner">
+    {{ errorMessage }}
+    <button class="btn-close-error" (click)="clearError()">X</button>
+  </div>
+
+  <div *ngIf="clientId" class="filter-info">
+    Filtre: Client #{{ clientId }}
+    <a routerLink="/commandes" class="btn-clear-filter">Voir tout</a>
+  </div>
+
+  <ng-container *ngIf="commandes$ | async as commandes; else loading">
+    <app-commande-table
+      [commandes]="commandes"
+      (delete)="onDelete($event)">
+    </app-commande-table>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="loading">Chargement des commandes...</div>
+  </ng-template>
+</div>

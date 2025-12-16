@@ -1,0 +1,42 @@
+<div class="container">
+    <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} un Client</h2>
+
+    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" formControlName="nom" class="form-control">
+            <div *ngIf="clientForm.get('nom')?.invalid && clientForm.get('nom')?.touched" class="error">
+                Le nom est requis.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" formControlName="prenom" class="form-control">
+            <div *ngIf="clientForm.get('prenom')?.invalid && clientForm.get('prenom')?.touched" class="error">
+                Le prénom est requis.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" class="form-control">
+            <div *ngIf="clientForm.get('email')?.invalid && clientForm.get('email')?.touched" class="error">
+                Email invalide.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input type="text" id="telephone" formControlName="telephone" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <textarea id="adresse" formControlName="adresse" class="form-control"></textarea>
+        </div>
+
+        <button type="submit" [disabled]="clientForm.invalid" class="btn-submit">Enregistrer</button>
+        <a routerLink="/clients" class="btn-cancel">Annuler</a>
+    </form>
+</div>

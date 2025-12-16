@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Angular cache
+.angular/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Debug logs
+*.log
+debug_serve*.log
+frontend*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+nul
+
+# Environment files
+.env
+.env.local

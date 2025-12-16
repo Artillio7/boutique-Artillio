@@ -1,0 +1,35 @@
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Client</th>
+        <th>Montant Total</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let commande of commandes; trackBy: trackByCommande">
+        <td>{{ commande.numeroCommande }}</td>
+        <td>{{ commande.dateCommande | date:'short' }}</td>
+        <td>{{ commande.client?.nom }} {{ commande.client?.prenom }}</td>
+        <td>{{ commande.montantTotal | currency:'EUR' }}</td>
+        <td>
+          <span [class.status-paid]="commande.statut === 'Payee'"
+                [class.status-pending]="commande.statut === 'EnCours'">
+            {{ commande.statut }}
+          </span>
+        </td>
+        <td>
+          <a [routerLink]="['/commandes', commande.id]" class="btn-view">Voir</a>
+          <button (click)="onDelete(commande.id)" class="btn-delete">Supprimer</button>
+        </td>
+      </tr>
+      <tr *ngIf="commandes.length === 0">
+        <td colspan="6" class="no-data">Aucune commande trouvée.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
