@@ -15,8 +15,6 @@ dist/
 
 # Debug logs
 *.log
-debug_serve*.log
-frontend*.log
 
 # OS files
 .DS_Store
@@ -26,3 +24,6 @@ nul
 # Environment files
 .env
 .env.local
+
+# Claude/AI
+.claude/
